@@ -1,0 +1,106 @@
+<canvas id="canvasSnake" width="902" height="902"></canvas>
+
+<style>
+    body {
+        background-color: #333;
+    }
+</style>
+
+<script>
+    var canvas = document.getElementById("canvasSnake");
+    var ctx = canvas.getContext("2d");
+    var width = 902;
+    var size = 30;
+    var snakeX, snakeY, pos, direction, trueDirection, x, y, pillX, pillY, speed, gameInterval, times;
+
+    var rectfill = (x, y) => {
+        ctx.fillRect(x + 2, y + 2, size - 2, size - 2);
+    }
+
+    var pill = () => {
+        pillX = Math.floor(Math.random() * 30) * 30;
+        pillY = Math.floor(Math.random() * 30) * 30;
+        ctx.fillStyle = "#66f";
+        rectfill(pillX, pillY);
+    }
+
+    var init = () => {
+        ctx.fillStyle = "#000";
+        ctx.fillRect(0, 0, width, width);
+        ctx.strokeStyle = "#333";
+        for (var index = 1; index <= width; index += size) {
+            ctx.moveTo(index, 0);
+            ctx.lineTo(index, width);
+            ctx.stroke();
+            ctx.moveTo(0, index);
+            ctx.lineTo(width, index);
+            ctx.stroke();
+        }
+        speed = 50;
+        times = 0;
+        snakeX = 300;
+        snakeY = 300;
+        pos = [0, 0, 0, 0, 0, 0];
+        direction = 0;
+        pill();
+    }
+    init();
+    var game = () => {
+        trueDirection = direction;
+        x = pos.shift()
+        y = pos.shift()
+        ctx.fillStyle = "#000";
+        rectfill(x, y);
+        pos.push(snakeX);
+        pos.push(snakeY);
+        ctx.fillStyle = "#f66";
+        rectfill(snakeX, snakeY);
+        switch (direction) {
+            case 0: //right
+                snakeX += size;
+                break;
+            case 1: //left
+                snakeX -= size;
+                break;
+            case 2: //up
+                snakeY += size;
+                break;
+            case 3: //down
+                snakeY -= size;
+                break;
+            default:
+                break;
+        }
+        if (snakeX === pillX && snakeY === pillY) {
+            pill();
+            pos.push(snakeX, snakeY);
+        }
+        times++;
+        if (snakeX < -30 || snakeY < -30 || snakeX > 902 || snakeY > 902)
+            init();
+        else if (times > 10) {
+            times = 0;
+            speed /= 1.01;
+            clearInterval(gameInterval);
+            gameInterval = setInterval(() => {
+                game();
+            }, speed);
+        }
+    }
+    gameInterval = setInterval(() => {
+        game();
+    }, speed);
+    document.addEventListener('keydown', (e) => {
+        if (trueDirection === direction) {
+            // if (e.keyCode === )
+            if (e.keyCode === 37 && trueDirection != 0) //left
+                direction = 1;
+            if (e.keyCode === 38 && trueDirection != 2) //up
+                direction = 3;
+            if (e.keyCode === 39 && trueDirection != 1) //right
+                direction = 0;
+            if (e.keyCode === 40 && trueDirection != 3) //down
+                direction = 2;
+        }
+    })
+</script>
