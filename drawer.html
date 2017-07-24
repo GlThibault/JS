@@ -1,0 +1,48 @@
+<canvas id="drawer"></canvas>
+
+<style>
+    body {
+        background-color: #333;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    html,
+    body {
+        width: 100%;
+        height: 100%;
+    }
+
+    canvas {
+        display: block;
+    }
+</style>
+
+<script>
+    const canvas = document.getElementById("drawer");
+    const ctx = canvas.getContext("2d");
+    const resizeCanvas = () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas, false);
+    resizeCanvas();
+
+    function getMousePos(canvas, e) {
+        var rect = canvas.getBoundingClientRect();
+        return {
+            x: e.clientX - rect.left,
+            y: e.clientY - rect.top
+        };
+    }
+    let color = 0;
+    canvas.addEventListener('mousemove', (e) => {
+        let mousePos = getMousePos(canvas, e);
+        ctx.fillStyle = "#" + Math.floor(Math.random() * 16581375).toString(16);
+        let size = Math.floor(Math.random() * 50);
+        ctx.fillRect(mousePos.x, mousePos.y, size, size);
+    }, false);
+</script>
