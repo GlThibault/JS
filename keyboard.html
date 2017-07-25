@@ -1,4 +1,4 @@
-<canvas id="drawer"></canvas>
+<canvas id="text"></canvas>
 
 <style>
     body {
@@ -22,7 +22,7 @@
 </style>
 
 <script>
-    const canvas = document.getElementById("drawer");
+    const canvas = document.getElementById("text");
     const ctx = canvas.getContext("2d");
     const resizeCanvas = () => {
         canvas.width = window.innerWidth;
@@ -38,11 +38,23 @@
             y: e.clientY - rect.top
         };
     }
-    let color = 0;
-    canvas.addEventListener('mousemove', (e) => {
-        let mousePos = getMousePos(canvas, e);
+
+    let mouse = 0;
+    let mousePos;
+    window.addEventListener("keydown", (e) => {
+        ctx.font = "30px Arial";
         ctx.fillStyle = "#" + Math.floor(Math.random() * 16581375).toString(16);
-        let size = Math.floor(Math.random() * 50);
-        ctx.fillRect(mousePos.x, mousePos.y, size, size);
+        if (mouse === 0)
+            ctx.fillText(e.key, Math.floor(Math.random() * window.innerWidth), Math.floor(Math.random() *
+                window.innerHeight));
+        else if (mousePos) {
+            ctx.fillText(e.key, mousePos.x, mousePos.y)
+        }
+    })
+
+    window.addEventListener("mouseover", () => mouse = 1);
+    window.addEventListener("mouseout", () => mouse = 0);
+    window.addEventListener('mousemove', (e) => {
+        mousePos = getMousePos(canvas, e);
     }, false);
 </script>
