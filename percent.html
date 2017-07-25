@@ -1,0 +1,71 @@
+<canvas id="bar" height="200px"></canvas>
+<p id="percent"></p>
+<style>
+    body {
+        background-color: #333;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    html,
+    body {
+        width: 100%;
+        height: 100%;
+    }
+
+    canvas {
+        display: block;
+    }
+
+    #percent {
+        position: absolute;
+        top: 100;
+        text-align: center;
+        width: 100%;
+        color: #66f;
+        font: 6em Arial;
+    }
+</style>
+
+<script>
+    const canvas = document.getElementById("bar");
+    const ctx = canvas.getContext("2d");
+    const resizeCanvas = () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas, false);
+    resizeCanvas();
+
+    let perc = 0;
+    const shrink = setInterval(() => {
+        if (perc >= 100) {
+            clearInterval(shrink);
+            document.getElementById("percent").innerHTML = "GG !";
+        } else {
+            if (perc > 0)
+                perc -= 1;
+            ctx.fillStyle = "#f66";
+            ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+            ctx.fillStyle = "#6f6";
+            ctx.fillRect(0, 0, window.innerWidth / 100 * perc, window.innerHeight);
+            document.getElementById("percent").innerHTML = perc + "%";
+        }
+    }, 100);
+
+    window.addEventListener("keydown", (e) => {
+        if (perc > 100) {
+            clearInterval(shrink);
+            document.getElementById("percent").innerHTML = "GG !";
+        } else {
+            if (e.keyCode === 32)
+                perc += 5;
+            ctx.fillStyle = "#6f6";
+            ctx.fillRect(0, 0, window.innerWidth / 100 * perc, window.innerHeight);
+            document.getElementById("percent").innerHTML = perc + "%";
+        }
+    })
+</script>
